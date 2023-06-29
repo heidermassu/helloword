@@ -1,0 +1,352 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: Infra
+      folder: alerts
+      interval: 1m
+      rules:
+        - uid: c0fba04a-98ea-4de6-af78-9cb4c9bd07b4
+          title: Active Resources
+          condition: B
+          data:
+            - refId: Active Resources
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+              model:
+                datasource:
+                    type: prometheus
+                    uid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+                editorMode: builder
+                expr: nodejs_active_resources{instance="localhost:2000", type="TTYWrap"}
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                maxDataPoints: 43200
+                range: true
+                refId: Active Resources
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: Active Resources
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: A
+                type: reduce
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: B
+                type: threshold
+          dashboardUid: a5678d17-b307-44ee-9ecc-118f87b73c0d
+          panelId: 3
+          noDataState: Alerting
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: a5678d17-b307-44ee-9ecc-118f87b73c0d
+            __panelId__: "3"
+            description: Active Resources
+          isPaused: false
+        - uid: b6e6856f-09fd-4073-b38d-c447cf7443d5
+          title: CPU Per User
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+              model:
+                datasource:
+                    type: prometheus
+                    uid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+                editorMode: builder
+                expr: process_cpu_user_seconds_total{instance="localhost:2000"}
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+            - refId: C
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: a5678d17-b307-44ee-9ecc-118f87b73c0d
+          panelId: 5
+          noDataState: Alerting
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: a5678d17-b307-44ee-9ecc-118f87b73c0d
+            __panelId__: "5"
+            description: CPU
+          isPaused: false
+        - uid: d248d0ed-20c2-45a0-a142-2dadae10b0f1
+          title: Status Code
+          condition: B
+          data:
+            - refId: Status_Code
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+              model:
+                datasource:
+                    type: prometheus
+                    uid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+                editorMode: builder
+                expr: http_status_code_total{instance="localhost:2000"}
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                maxDataPoints: 43200
+                range: true
+                refId: Status_Code
+            - refId: A
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: Status_Code
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: A
+                type: reduce
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: B
+                type: threshold
+          dashboardUid: a5678d17-b307-44ee-9ecc-118f87b73c0d
+          panelId: 6
+          noDataState: Alerting
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: a5678d17-b307-44ee-9ecc-118f87b73c0d
+            __panelId__: "6"
+            description: Status Code
+          isPaused: false
+        - uid: ceba238c-f433-4bb3-b362-7a5de8b67537
+          title: Memory bytes
+          condition: B
+          data:
+            - refId: External_Memory
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+              model:
+                datasource:
+                    type: prometheus
+                    uid: e97e7380-88c1-44e5-8f2b-71bde8050d46
+                editorMode: builder
+                expr: nodejs_external_memory_bytes{instance="localhost:2000"}
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                maxDataPoints: 43200
+                range: true
+                refId: External_Memory
+            - refId: A
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: External_Memory
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: A
+                type: reduce
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 970000
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: B
+                type: threshold
+          dashboardUid: a5678d17-b307-44ee-9ecc-118f87b73c0d
+          panelId: 4
+          noDataState: Alerting
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: a5678d17-b307-44ee-9ecc-118f87b73c0d
+            __panelId__: "4"
+            description: Memory
+          isPaused: false
